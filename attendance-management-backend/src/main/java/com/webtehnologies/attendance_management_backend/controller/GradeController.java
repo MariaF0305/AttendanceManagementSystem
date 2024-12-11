@@ -2,7 +2,6 @@ package com.webtehnologies.attendance_management_backend.controller;
 
 import com.webtehnologies.attendance_management_backend.model.GradeEntity;
 import com.webtehnologies.attendance_management_backend.service.GradeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

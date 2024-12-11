@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -43,7 +42,7 @@ public class GradeService {
         return gradeRepository.findAll();
     }
 
-    public void deleteGradeById(Long id) {
+     public void deleteGradeById(Long id) {
         gradeRepository.deleteById(id);
     }
 }

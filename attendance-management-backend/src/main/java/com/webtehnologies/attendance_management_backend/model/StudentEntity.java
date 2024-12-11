@@ -8,40 +8,43 @@ import java.util.List;
 @Entity
 @Table(name = "student")
 public class StudentEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
-    private Long studenId;
-    @ManyToOne
-    @JoinColumn(name = "class_id", nullable = false)
-    private GradeEntity gradeEntity;
+    private Long studentId;
     private String studentName;
+
+    @ManyToOne
+    @JoinColumn(name = "grade_id", nullable = false)
+    private GradeEntity grade;
+
     @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AttendanceEntity> attendanceRecords;
 
     public StudentEntity() {
     }
 
-    public StudentEntity(Long studenId, GradeEntity gradeEntity, String studentName) {
-        this.studenId = studenId;
-        this.gradeEntity = gradeEntity;
+    public StudentEntity(Long studentId, GradeEntity grade, String studentName) {
+        this.studentId = studentId;
+        this.grade = grade;
         this.studentName = studentName;
     }
 
-    public Long getStudenId() {
-        return studenId;
+    public Long getStudentId() {
+        return studentId;
     }
 
-    public void setStudenId(Long studenId) {
-        this.studenId = studenId;
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
-    public GradeEntity getGradeEntity() {
-        return gradeEntity;
+    public GradeEntity getGrade() {
+        return grade;
     }
 
-    public void setGradeEntity(GradeEntity gradeEntity) {
-        this.gradeEntity = gradeEntity;
+    public void setGrade(GradeEntity gradeEntity) {
+        this.grade = gradeEntity;
     }
 
     public String getStudentName() {

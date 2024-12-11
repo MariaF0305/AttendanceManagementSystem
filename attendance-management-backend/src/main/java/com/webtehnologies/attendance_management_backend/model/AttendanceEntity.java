@@ -9,17 +9,20 @@ import java.util.List;
 @Entity
 @Table(name = "attendance")
 public class AttendanceEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Long attendanceId;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "student_attendance",
-            joinColumns = @JoinColumn(name = "attendance_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
+            name = "attendance",
+            joinColumns = @JoinColumn(name = "attendanceId"),
+            inverseJoinColumns = @JoinColumn(name = "studentId")
     )
     private List<StudentEntity> students;
+
     private LocalDate date;
     private Boolean status;
 
