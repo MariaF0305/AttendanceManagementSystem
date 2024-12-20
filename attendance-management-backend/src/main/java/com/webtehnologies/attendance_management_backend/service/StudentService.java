@@ -57,4 +57,8 @@ public class StudentService {
     public void deleteStudentById(Long id) {
         studentRepository.deleteById(id);
     }
+
+    public List<StudentEntity> findStudentsByGradeId(Long gradeId) {
+        return studentRepository.findStudentsByGrade_GradeId(gradeId);
+    }
 }

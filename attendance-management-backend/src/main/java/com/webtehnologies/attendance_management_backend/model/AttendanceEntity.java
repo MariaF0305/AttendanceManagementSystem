@@ -1,10 +1,8 @@
 package com.webtehnologies.attendance_management_backend.model;
 
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "attendance")
@@ -15,24 +13,25 @@ public class AttendanceEntity implements Serializable {
     @Column(nullable = false, updatable = false)
     private Long attendanceId;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "attendance",
-            joinColumns = @JoinColumn(name = "attendanceId"),
-            inverseJoinColumns = @JoinColumn(name = "studentId")
-    )
-    private List<StudentEntity> students;
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private StudentEntity student;
 
     private LocalDate date;
     private Boolean status;
 
+    @Column(nullable = false)
+    private Boolean locked = false;
+
+
     public AttendanceEntity() {
     }
 
-    public AttendanceEntity(Long attendanceId, List<StudentEntity> students, LocalDate date, Boolean status) {
-        this.students = students;
+    public AttendanceEntity(Long attendanceId, LocalDate date, Boolean status, StudentEntity student) {
+        this.attendanceId = attendanceId;
         this.date = date;
         this.status = status;
+        this.student = student;
     }
 
     public Long getAttendanceId() {
@@ -41,14 +40,6 @@ public class AttendanceEntity implements Serializable {
 
     public void setAttendanceId(Long attendanceId) {
         this.attendanceId = attendanceId;
-    }
-
-    public List<StudentEntity> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<StudentEntity> students) {
-        this.students = students;
     }
 
     public LocalDate getDate() {
@@ -65,5 +56,21 @@ public class AttendanceEntity implements Serializable {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public StudentEntity getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentEntity student) {
+        this.student = student;
     }
 }

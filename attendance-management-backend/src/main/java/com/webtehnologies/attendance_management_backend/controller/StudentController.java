@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/student")
+@CrossOrigin(origins = "http://localhost:4200")
 public class StudentController {
     private StudentService studentService;
 
@@ -47,6 +48,12 @@ public class StudentController {
     public ResponseEntity<?> deleteStudent(@PathVariable("id") Long id) {
         studentService.deleteStudentById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("grades/{gradeId}")
+    public ResponseEntity<List<StudentEntity>> getStudentsByGradeId(@PathVariable Long gradeId) {
+        List<StudentEntity> students = studentService.findStudentsByGradeId(gradeId);
+        return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
 }

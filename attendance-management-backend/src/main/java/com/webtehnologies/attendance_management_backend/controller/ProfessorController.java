@@ -1,5 +1,6 @@
 package com.webtehnologies.attendance_management_backend.controller;
 
+import com.webtehnologies.attendance_management_backend.dto.LoginRequest;
 import com.webtehnologies.attendance_management_backend.model.GradeEntity;
 import com.webtehnologies.attendance_management_backend.model.ProfessorEntity;
 import com.webtehnologies.attendance_management_backend.service.ProfessorService;
@@ -7,12 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/professor")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProfessorController {
     private ProfessorService professorService;
 
@@ -56,9 +59,23 @@ public class ProfessorController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     @GetMapping("/professor-grades/{professorId}")
     public ResponseEntity<List<GradeEntity>> getProfessorId(@PathVariable("professorId") Long professorId) {
         List<GradeEntity> grades = professorService.findGradesByProfessorId(professorId);
         return new ResponseEntity<>(grades, HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> loginProfessor(@RequestBody LoginRequest loginRequest) {
+        try {
+            ProfessorEntity professor = professorService.loginProfessor(loginRequest.getEmail(), loginRequest.getPassword());
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", professor.getId());
+            response.put("email", professor.getEmail());
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid email or password"));
+        }
     }
 }

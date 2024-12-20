@@ -19,7 +19,7 @@ public class StudentEntity implements Serializable {
     @JoinColumn(name = "grade_id", nullable = false)
     private GradeEntity grade;
 
-    @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AttendanceEntity> attendanceRecords;
 
     public StudentEntity() {
