@@ -1,13 +1,17 @@
 package com.webtehnologies.attendance_management_backend.service;
 
+import com.webtehnologies.attendance_management_backend.dto.StudentDTO;
 import com.webtehnologies.attendance_management_backend.model.GradeEntity;
 import com.webtehnologies.attendance_management_backend.model.StudentEntity;
+import com.webtehnologies.attendance_management_backend.repository.AttendanceRepository;
 import com.webtehnologies.attendance_management_backend.repository.GradeRepository;
 import com.webtehnologies.attendance_management_backend.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +21,13 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final GradeRepository gradeRepository;
+    private AttendanceRepository attendanceRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, GradeRepository gradeRepository) {
+    public StudentService(StudentRepository studentRepository, GradeRepository gradeRepository, AttendanceRepository attendanceRepository) {
         this.studentRepository = studentRepository;
         this.gradeRepository = gradeRepository;
+        this.attendanceRepository = attendanceRepository;
     }
 
     public StudentEntity addStudent(StudentEntity student, Long gradeId) {
@@ -60,5 +66,18 @@ public class StudentService {
 
     public List<StudentEntity> findStudentsByGradeId(Long gradeId) {
         return studentRepository.findStudentsByGrade_GradeId(gradeId);
+    }
+
+    public List<StudentDTO> getStudentsWithAttendanceFlag(Long gradeId, LocalDate date) {
+        List<StudentEntity> students = studentRepository.findStudentsByGrade_GradeId(gradeId);
+        List<StudentDTO> studentDTOs = new ArrayList<>();
+
+        students.forEach(student -> {
+            boolean attendanceExists = attendanceRepository.findByDateAndStudent(date, student) != null;
+            StudentDTO dto = new StudentDTO(student.getStudentId(), student.getStudentName(), attendanceExists);
+            studentDTOs.add(dto);
+        });
+
+        return studentDTOs;
     }
 }

@@ -1,5 +1,6 @@
 package com.webtehnologies.attendance_management_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class AttendanceEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
+    @JsonBackReference
     private StudentEntity student;
 
     private LocalDate date;

@@ -3,10 +3,12 @@ package com.webtehnologies.attendance_management_backend.controller;
 import com.webtehnologies.attendance_management_backend.model.AttendanceEntity;
 import com.webtehnologies.attendance_management_backend.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -26,5 +28,13 @@ public class AttendanceController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<Boolean> checkAttendanceStatus(
+            @RequestParam Long gradeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        boolean isAttendanceSaved = attendanceService.isAttendanceSavedForDate(gradeId, date);
+        return ResponseEntity.ok(isAttendanceSaved);
     }
 }

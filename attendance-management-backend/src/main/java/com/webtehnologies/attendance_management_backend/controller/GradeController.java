@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/grade")
+@CrossOrigin(origins = "http://localhost:4200")
 public class GradeController {
     private GradeService gradeService;
 

@@ -1,5 +1,6 @@
 package com.webtehnologies.attendance_management_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -20,7 +21,14 @@ public class StudentEntity implements Serializable {
     private GradeEntity grade;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<AttendanceEntity> attendanceRecords;
+
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
+    private Integer nrAttendance = 0;
+
+    @Transient
+    private boolean attendanceMarkedForDate;
 
     public StudentEntity() {
     }
@@ -29,6 +37,22 @@ public class StudentEntity implements Serializable {
         this.studentId = studentId;
         this.grade = grade;
         this.studentName = studentName;
+    }
+
+    public void incrementNrAttendance() {
+        if (this.nrAttendance == null) {
+            this.nrAttendance = 0;
+        }
+        this.nrAttendance++;
+    }
+
+
+    public boolean isAttendanceMarkedForDate() {
+        return attendanceMarkedForDate;
+    }
+
+    public void setAttendanceMarkedForDate(boolean attendanceMarkedForDate) {
+        this.attendanceMarkedForDate = attendanceMarkedForDate;
     }
 
     public Long getStudentId() {
@@ -53,5 +77,21 @@ public class StudentEntity implements Serializable {
 
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+
+    public List<AttendanceEntity> getAttendanceRecords() {
+        return attendanceRecords;
+    }
+
+    public void setAttendanceRecords(List<AttendanceEntity> attendanceRecords) {
+        this.attendanceRecords = attendanceRecords;
+    }
+
+    public int getNrAttendance() {
+        return nrAttendance;
+    }
+
+    public void setNrAttendance(int nrAttendance) {
+        this.nrAttendance = nrAttendance;
     }
 }

@@ -1,5 +1,6 @@
 package com.webtehnologies.attendance_management_backend.controller;
 
+import com.webtehnologies.attendance_management_backend.dto.StudentDTO;
 import com.webtehnologies.attendance_management_backend.model.GradeEntity;
 import com.webtehnologies.attendance_management_backend.model.StudentEntity;
 import com.webtehnologies.attendance_management_backend.service.StudentService;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -54,6 +56,14 @@ public class StudentController {
     public ResponseEntity<List<StudentEntity>> getStudentsByGradeId(@PathVariable Long gradeId) {
         List<StudentEntity> students = studentService.findStudentsByGradeId(gradeId);
         return new ResponseEntity<>(students, HttpStatus.OK);
+    }
+
+    @GetMapping("/grades-flag/{gradeId}")
+    public ResponseEntity<List<StudentDTO>> getStudentsWithAttendanceFlag(
+            @PathVariable Long gradeId,
+            @RequestParam("date") LocalDate date) {
+        List<StudentDTO> students = studentService.getStudentsWithAttendanceFlag(gradeId, date);
+        return ResponseEntity.ok(students);
     }
 
 }

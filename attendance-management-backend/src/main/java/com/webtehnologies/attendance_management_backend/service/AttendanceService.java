@@ -16,6 +16,7 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private StudentRepository studentRepository;
 
+    @Autowired
     public AttendanceService(AttendanceRepository attendanceRepository, StudentRepository studentRepository) {
         this.attendanceRepository = attendanceRepository;
         this.studentRepository = studentRepository;
@@ -30,10 +31,8 @@ public class AttendanceService {
             StudentEntity student = studentRepository.findById(attendance.getStudent().getStudentId())
                     .orElseThrow(() -> new IllegalStateException("Student not found"));
 
-            attendance.setStudent(student);
-            AttendanceEntity existingRecord = attendanceRepository.findByDateAndStudent(
-                    attendance.getDate(), attendance.getStudent()
-            );
+            AttendanceEntity existingRecord = attendanceRepository.findByDateAndStudent(attendance.getDate(), student);
+
 
             if (existingRecord != null && existingRecord.getLocked()) {
                 throw new IllegalStateException("Attendance for this student on the selected date is locked.");
@@ -46,9 +45,18 @@ public class AttendanceService {
             } else {
                 attendance.setLocked(true);
                 attendanceRepository.save(attendance);
+                }
+
+            if (attendance.getStatus() != null && attendance.getStatus()) {
+                student.incrementNrAttendance();
+                studentRepository.save(student);
             }
         }
-
-        attendanceRepository.saveAll(attendanceList);
     }
+
+    public boolean isAttendanceSavedForDate(Long gradeId, LocalDate date) {
+        List<AttendanceEntity> attendanceRecords = attendanceRepository.findByGradeAndDate(gradeId, date);
+        return attendanceRecords != null && !attendanceRecords.isEmpty();
+    }
+
 }
